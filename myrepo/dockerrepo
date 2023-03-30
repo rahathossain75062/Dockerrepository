@@ -1,0 +1,100 @@
+Install Docker on ubuntu
+
+sudo apt-get update
+
+sudo apt-get install \
+    ca-certificates \
+    curl \
+    gnupg
+
+sudo mkdir -m 0755 -p /etc/apt/keyrings
+curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo gpg --dearmor -o /etc/apt/keyrings/docker.gpg
+
+echo \
+  "deb [arch="$(dpkg --print-architecture)" signed-by=/etc/apt/keyrings/docker.gpg] https://download.docker.com/linux/ubuntu \
+  "$(. /etc/os-release && echo "$VERSION_CODENAME")" stable" | \
+  sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
+
+sudo apt-get update
+
+sudo chmod a+r /etc/apt/keyrings/docker.gpg
+sudo apt-get update
+
+sudo apt-get install docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin
+
+service docker start
+
+service docker status
+
+docker images
+
+Vi Dockerfile
+
+docker build -t test .
+
+Docker images
+
+docker run -it --name 'testcontainer test' /bin/bash
+
+
+
+Install Docker on linux
+
+sudo yum update
+
+sudo yum search docker
+
+sudo yum info docker
+
+sudo yum install docker
+
+sudo usermod -a -G docker ec2-user
+$ id ec2-user
+# Reload a Linux user's group assignments to docker w/o logout
+$ newgrp docker
+
+sudo systemctl enable docker.service
+
+sudo systemctl start docker.service
+
+sudo systemctl status docker.service
+
+docker version
+
+mkdir static-website-1
+
+$ cd static-website-1
+
+vim Dockerfile
+
+FROM rockylinux/rockylinux:latest
+ 
+MAINTAINER nixCraft
+LABEL Remarks="RockyLinux test image for installing static webpage with Apache2"
+ 
+# Install apache2 with less
+RUN yum -y update && \
+yum -y install httpd && \
+yum clean all
+ 
+# Sample index.html for test 
+COPY index.html /var/www/html/index.html
+ 
+# Port and set entry point for container 
+EXPOSE 80
+ENTRYPOINT /usr/sbin/httpd -DFOREGROUND
+
+sudo docker build -t staticsite01 .
+
+sudo docker images
+
+sudo docker run -d -p 80:80 --name staticsite01 staticsite01
+
+$ sudo docker ps
+
+$ sudo docker port staticsite01
+
+$ curl 127.0.0.1:80
+
+
+
